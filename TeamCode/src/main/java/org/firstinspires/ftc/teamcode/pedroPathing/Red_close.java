@@ -40,7 +40,7 @@ public class Red_close extends OpMode {
         outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(34, 130, Math.toRadians(180)));
+        follower.setStartingPose(new Pose(110, 145, Math.toRadians(0)));
 
         paths = new Paths(follower); // Build paths
 
@@ -81,6 +81,7 @@ public class Red_close extends OpMode {
 
 
 
+
     public static class Paths {
         public PathChain shoot1;
         public PathChain pickup1;
@@ -93,71 +94,71 @@ public class Red_close extends OpMode {
         public Paths(Follower follower) {
             shoot1 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(34.000, 135.000),
+                                    new Pose(110.000, 145.000),
 
-                                    new Pose(60.000, 84.000)
+                                    new Pose(84.000, 84.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(130))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(50))
 
                     .build();
 
             pickup1 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(60.000, 84.000),
+                                    new Pose(84.000, 84.000),
 
-                                    new Pose(19.000, 84.000)
+                                    new Pose(130.000, 84.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(130), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(50), Math.toRadians(0))
 
                     .build();
 
             shoot2 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(19.000, 84.000),
+                                    new Pose(130.000, 84.000),
 
-                                    new Pose(60.000, 84.000)
+                                    new Pose(84.000, 84.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(130))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(50))
 
                     .build();
 
             pickup21 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(60.000, 84.000),
+                                    new Pose(84.000, 84.000),
 
-                                    new Pose(60.000, 60.000)
+                                    new Pose(84.000, 60.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(130), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(50), Math.toRadians(0))
 
                     .build();
 
             pickup22 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(60.000, 60.000),
+                                    new Pose(84.000, 60.000),
 
-                                    new Pose(20.000, 60.000)
+                                    new Pose(133.000, 60.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
 
                     .build();
 
             shoot3 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(20.000, 60.000),
+                                    new Pose(133.000, 60.000),
 
-                                    new Pose(60.000, 84.000)
+                                    new Pose(84.000, 84.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(130))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(50))
 
                     .build();
 
             gate = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(60.000, 84.000),
+                                    new Pose(84.000, 84.000),
 
-                                    new Pose(15.000, 70.000)
+                                    new Pose(137.000, 70.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(130), Math.toRadians(90))
+                    ).setLinearHeadingInterpolation(Math.toRadians(50), Math.toRadians(90))
 
                     .build();
         }
@@ -171,11 +172,12 @@ public class Red_close extends OpMode {
 
 
 
+
     public void autonomousPathUpdate() {
         switch (pathState){
             case 0:
                 if (pathTimer.getElapsedTime() > 1000) {
-                    follower.followPath(paths.shoot1);
+                    follower.followPath(paths.shoot1, 0.6, false);
                     setPathState(1);
                 }
                 break; // IMPORTANT!
@@ -189,7 +191,7 @@ public class Red_close extends OpMode {
                 if (pathTimer.getElapsedTime() > 2000){
 
                     flyWheel.setPower(0.0);
-                    follower.followPath(paths.pickup1, 0.7, true);
+                    follower.followPath(paths.pickup1, 0.6, true);
                     setPathState(3);
                 }
                 else{
@@ -198,7 +200,7 @@ public class Red_close extends OpMode {
                 break;
             case 3:
                 if(!follower.isBusy()) {
-                    follower.followPath(paths.shoot2, true);
+                    follower.followPath(paths.shoot2, 0.6, true);
                     setPathState(4);
                 }
                 break; // IMPORTANT!
@@ -210,7 +212,7 @@ public class Red_close extends OpMode {
             case 5:
                 if (pathTimer.getElapsedTime() > 3000){
                     flyWheel.setPower(0.0);
-                    follower.followPath(paths.pickup21, 0.7, true);
+                    follower.followPath(paths.pickup21, 0.6, true);
                     setPathState(6);
                 }
                 else{
@@ -219,13 +221,13 @@ public class Red_close extends OpMode {
                 break;
             case 6:
                 if(!follower.isBusy()) {
-                    follower.followPath(paths.pickup22, true);
+                    follower.followPath(paths.pickup22, 0.6, true);
                     setPathState(7);
                 }
                 break; // IMPORTANT!
             case 7:
                 if(!follower.isBusy()) {
-                    follower.followPath(paths.shoot3, true);
+                    follower.followPath(paths.shoot3, 0.6, true);
                     setPathState(8);
                 }
                 break; // IMPORTANT!
@@ -237,7 +239,7 @@ public class Red_close extends OpMode {
             case 9:
                 if (pathTimer.getElapsedTime() > 3000){
                     flyWheel.setPower(0.0);
-                    follower.followPath(paths.gate, 0.7, true);
+                    follower.followPath(paths.gate, 0.6, true);
                     setPathState(-1);
                 }
                 else{
